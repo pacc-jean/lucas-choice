@@ -46,4 +46,43 @@ const registerUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser };
+// @desc    Login a user
+// @route   POST /api/login
+// @access  Public
+const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+  
+    try {
+      // 1. Find user by email
+      const user = await User.findOne({ email });
+  
+      if (!user) {
+        return res.status(400).json({ message: 'Invalid email or password' });
+      }
+  
+      // 2. Compare passwords
+      const isMatch = await bcrypt.compare(password, user.password);
+  
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Invalid email or password' });
+      }
+  
+      // 3. Generate token
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: '30d',
+      });
+  
+      // 4. Send response
+      res.status(200).json({
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        token,
+      });
+    } catch (error) {
+      console.error('Login Error:', error.message);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+  
+module.exports = { registerUser, loginUser };
