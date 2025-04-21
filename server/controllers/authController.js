@@ -84,5 +84,57 @@ const loginUser = async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   };
+
+// @desc    Update user details
+// @route   PUT /api/account
+// @access  Private
+const updateUser = async (req, res) => {
+    const user = await User.findById(req.user._id);
+  
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+  
+    const { firstName, lastName, username, email, password } = req.body;
+  
+    try {
+      user.firstName = firstName || user.firstName;
+      user.lastName = lastName || user.lastName;
+      user.username = username || user.username;
+      user.email = email || user.email;
+  
+      if (password) {
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password, salt);
+      }
+  
+      const updatedUser = await user.save();
+  
+      res.json({
+        _id: updatedUser._id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        token: jwt.sign({ id: updatedUser._id }, process.env.JWT_SECRET, {
+          expiresIn: '30d',
+        }),
+      });
+    } catch (error) {
+      console.error('Update Error:', error.message);
+      res.status(500).json({ message: 'Failed to update user' });
+    }
+  };
+
+// @desc    Delete user account
+// @route   DELETE /api/account
+// @access  Private
+const deleteUser = async (req, res) => {
+    try {
+      await User.findByIdAndDelete(req.user._id);
+      res.json({ message: 'Account deleted successfully' });
+    } catch (error) {
+      console.error('Delete Error:', error.message);
+      res.status(500).json({ message: 'Failed to delete user' });
+    }
+  };
   
 module.exports = { registerUser, loginUser };
