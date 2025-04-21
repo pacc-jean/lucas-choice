@@ -1,5 +1,5 @@
 # luca's-choice
-An online shop for all things ladies' wear. Your choice is Luca's choice, so choose Luca's! ; )
+An online shop for all things ladies' wear. Your choice is Luca's choice, so choose Luca's! ;)
 ## User stories/Features
 1. Sign up
 2. Secure Login&Logout 
@@ -18,3 +18,11 @@ An online shop for all things ladies' wear. Your choice is Luca's choice, so cho
 15. Chat with other users on community board (share insights, fashion advice, and experiences with Luca's)
 16. Pay via Mpesa, PayPal and etc...
 17. 
+
+## Backend Project Setup
+I will use:
+• Node.js
+• Express.js (for API routes)
+• Mongoose (MongoDB ODM)
+• Strapi or Sanity (for content management, e.g., products, blogs, etc.)
+• Firebase Auth/Auth0 (user authentication)
