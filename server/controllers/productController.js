@@ -1,4 +1,5 @@
 const Product = require('../models/Product');
+const Category = require('../models/Category');
 const slugify = require('slugify');
 
 // @desc    Create a new product
