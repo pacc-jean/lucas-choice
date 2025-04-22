@@ -5,30 +5,47 @@ const slugify = require('slugify');
 // @route   POST /api/products
 // @access  Admin (for now, no restriction)
 exports.createProduct = async (req, res) => {
-  try {
-    const { name, description, price, category, images, sizes, colors, stock, trending } = req.body;
-    const slug = slugify(name, { lower: true });
+    try {
+      const {
+        name,
+        description,
+        price,
+        category,
+        images,
+        sizes,
+        colors,
+        stock,
+        trending,
+      } = req.body;
+  
+      const categoryDoc = await Category.findOne({ name: category });
+  
+      if (!categoryDoc) {
+        return res.status(400).json({ message: 'Category not found' });
+      }
 
-    const product = await Product.create({
-      name,
-      slug,
-      description,
-      price,
-      category,
-      images,
-      sizes,
-      colors,
-      stock,
-      trending,
-    });
-
-    res.status(201).json(product);
-  } catch (err) {
-    console.error('Product creation failed:', err.message);
-    res.status(500).json({ message: 'Failed to create product' });
-  }
-};
-
+      const slug = slugify(name, { lower: true });
+  
+      const product = await Product.create({
+        name,
+        slug,
+        description,
+        price,
+        category: categoryDoc._id,
+        images,
+        sizes,
+        colors,
+        stock,
+        trending,
+      });
+  
+      res.status(201).json(product);
+    } catch (err) {
+      console.error('Product creation failed:', err.message);
+      res.status(500).json({ message: 'Failed to create product' });
+    }
+  };
+  
 // @desc    Get all products
 // @route   GET /api/products
 exports.getProducts = async (req, res) => {
