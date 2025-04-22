@@ -17,8 +17,7 @@ An online shop for all things ladies' wear. Your choice is Luca's choice, so cho
 14. Chat/inquire directly with/from shop
 15. Chat with other users on community board (share insights, fashion advice, and experiences with Luca's)
 16. Pay via Mpesa, PayPal and etc...
-17. Search for products by name
-
+17. Search by category name & item name
 ## Backend Project Setup
 I will use:
 • Node.js

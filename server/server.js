@@ -28,6 +28,8 @@ app.listen(PORT, () => {
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 
 // Use routes
 app.use('/api', authRoutes);
+app.use('/api/categories', categoryRoutes);
