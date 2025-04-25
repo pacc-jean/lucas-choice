@@ -31,9 +31,11 @@ const authRoutes = require('./routes/authRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 const cartRoutes = require('./routes/cartRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 // Use routes
 app.use('/api', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/cart', require('./routes/cartRoutes'));
+app.use('/api/cart', cartRoutes);
+app.use('/api/orders', orderRoutes);
