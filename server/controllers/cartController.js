@@ -95,14 +95,28 @@ exports.getCartItems = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    // Fetch all cart items for the user
     const cartItems = await Cart.find({ user: userId }).populate('product');
 
     if (!cartItems.length) {
       return res.status(404).json({ message: 'Your cart is empty' });
     }
 
-    res.status(200).json(cartItems);
+    let grandTotal = 0;
+
+    // Add totalPrice to each cart item and calculate grandTotal
+    const cartWithTotals = cartItems.map(item => {
+      const totalPrice = item.product.price * item.quantity;
+      grandTotal += totalPrice;
+      return {
+        ...item.toObject(),
+        totalPrice: Number(totalPrice.toFixed(2)),
+      };
+    });
+
+    res.status(200).json({
+      items: cartWithTotals,
+      grandTotal: Number(grandTotal.toFixed(2)),
+    });
   } catch (error) {
     console.error('Error fetching cart items:', error.message);
     res.status(500).json({ message: 'Failed to get cart items' });
