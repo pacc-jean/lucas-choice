@@ -3,7 +3,7 @@ const Cart = require('../models/Cart');
 const Product = require('../models/Product');
 
 // @desc    Create a new order from cart items
-// @route   POST /api/orders
+// @route   POST /api/orders/from-cart
 // @access  Private
 exports.createOrderFromCart = async (req, res) => {
   const userId = req.user._id;
@@ -51,27 +51,32 @@ exports.createOrderFromCart = async (req, res) => {
 // @route   POST /api/orders/quick
 // @access  Private
 exports.createOrderQuick = async (req, res) => {
-  const { items, shippingAddress, paymentMethod } = req.body;
+  const { productId, quantity, shippingAddress, paymentMethod } = req.body;
   const userId = req.user._id;
 
   try {
-    // Prepare order items array
-    const orderItems = items.map(item => ({
-      product: item.productId,
-      quantity: item.quantity,
-      total: item.price * item.quantity,
-    }));
+    // Find the product
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
 
-    // Calculate total amount
-    const totalAmount = orderItems.reduce((acc, item) => acc + item.total, 0);
+    // Calculate total
+    const total = product.price * quantity;
 
-    // Create the order
+    // Create order
     const order = new Order({
       user: userId,
-      items: orderItems,
+      items: [
+        {
+          product: productId,
+          quantity,
+          total,
+        },
+      ],
       shippingAddress,
       paymentMethod,
-      totalAmount,
+      totalAmount: total,
     });
 
     await order.save();
@@ -175,7 +180,9 @@ exports.deleteOrder = async (req, res) => {
       return res.status(400).json({ message: 'Cannot delete order in this status' });
     }
 
-    await order.remove();
+    // Use deleteOne() instead of remove()
+    await Order.deleteOne({ _id: req.params.id });
+
     res.status(200).json({ message: 'Order deleted' });
   } catch (error) {
     console.error('Error deleting order:', error.message);

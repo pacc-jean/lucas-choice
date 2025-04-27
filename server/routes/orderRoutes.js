@@ -10,7 +10,7 @@ const {
   deleteOrder,
 } = require('../controllers/orderController');
 
-router.post('/', protect, createOrderFromCart);
+router.post('/from-cart', protect, createOrderFromCart);
 router.post('/quick', protect, createOrderQuick);
 router.get('/', protect, getOrders);
 router.get('/:id', protect, getOrderById);
