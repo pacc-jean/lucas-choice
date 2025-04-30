@@ -18,10 +18,10 @@ An online shop for all things ladies' wear. Your choice is Luca's choice, so cho
 15. Chat with other users on community board (share insights, fashion advice, and experiences with Luca's)
 16. Pay via Mpesa, PayPal and etc...
 17. Search by category name & item name
-## Backend Project Setup
-I will use:
-• Node.js
-• Express.js (for API routes)
-• Mongoose (MongoDB ODM)
+## Backend Tech Stack
+• Node.js (JavaScript runtime)
+• Express.js (Web server framework)
+• MongoDB Atlas (Cloud NoSQL database)
+• Moongose (Object Data Modeling for MongoDB in Node.js)
 • Strapi or Sanity (for content management, e.g., products, blogs, etc.)
 • Firebase Auth/Auth0 (user authentication)
