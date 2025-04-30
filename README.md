@@ -17,4 +17,12 @@ An online shop for all things ladies' wear. Your choice is Luca's choice, so cho
 14. Chat/inquire directly with/from shop
 15. Chat with other users on community board (share insights, fashion advice, and experiences with Luca's)
 16. Pay via Mpesa, PayPal and etc...
-17. 
+17. Search by category name & item name
+## Frontend Tech Stack
+• Next.js (React+SSR for SEO and fast performance)
+• Typescript (For type saftey and developer experience)
+• Tailwind CSS (Utility-first styling)
+• Framer Motion (Animations & transitions)
+• React Query (For data fetching)
+• Firebase Auth or Auth0
+• Axios (For HTTP requests)
