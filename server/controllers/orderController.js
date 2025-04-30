@@ -16,12 +16,30 @@ exports.createOrderFromCart = async (req, res) => {
       return res.status(400).json({ message: 'Your cart is empty' });
     }
 
-    // Prepare order items array
-    const orderItems = cartItems.map(item => ({
-      product: item.product._id,
-      quantity: item.quantity,
-      total: item.product.price * item.quantity,
-    }));
+    // Check inventory for each item
+    for (const item of cartItems) {
+      if (item.quantity > item.product.stock) {
+        return res.status(400).json({ 
+          message: `Only ${item.product.stock} of ${item.product.name} left in stock`
+        });
+      }
+    }
+
+    // Prepare order items and update product inventory
+    const orderItems = [];
+
+    for (const item of cartItems) {
+      const total = item.product.price * item.quantity;
+      orderItems.push({
+        product: item.product._id,
+        quantity: item.quantity,
+        total,
+      });
+
+      // Update stock
+      item.product.stock -= item.quantity;
+      await item.product.save();
+    }
 
     // Calculate total amount
     const totalAmount = orderItems.reduce((acc, item) => acc + item.total, 0);
@@ -37,7 +55,7 @@ exports.createOrderFromCart = async (req, res) => {
 
     await order.save();
 
-    // Remove items from cart
+    // Clear cart
     await Cart.deleteMany({ user: userId });
 
     res.status(201).json(order);
@@ -61,8 +79,19 @@ exports.createOrderQuick = async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
+    // Check inventory
+    if (quantity > product.stock) {
+      return res.status(400).json({ 
+        message: `Only ${product.stock} of ${product.name} left in stock` 
+      });
+    }
+
     // Calculate total
     const total = product.price * quantity;
+
+    // Update inventory
+    product.stock -= quantity;
+    await product.save();
 
     // Create order
     const order = new Order({
