@@ -4,6 +4,7 @@ import { Menu, X, Sun, Moon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -22,8 +23,20 @@ export default function Navbar() {
   return (
     <nav className="bg-white dark:bg-gray-900 shadow-md">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <div className="text-xl font-bold text-pink-600">Luca's Choice</div>
 
+        {/* Logo and Brand */}
+        <Link href="/" className="flex items-center space-x-2">
+          <Image
+            src="/logo.png"
+            alt="Luca's Choice logo"
+            width={32}
+            height={32}
+            className="rounded-full shadow-lg ring-2 ring-pink-400"
+          />
+          <span className="text-xl font-bold text-pink-600">Luca's Choice</span>
+        </Link>
+
+         {/* Desktop Nav */}
         <div className="hidden md:flex space-x-4 items-center">
           {navLinks.map((link) => (
             <Link
@@ -48,6 +61,7 @@ export default function Navbar() {
           </button>
         </div>
 
+        {/* Mobile Menu Button */}
         <div className="md:hidden">
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -58,6 +72,7 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Mobile Nav Dropdown */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
